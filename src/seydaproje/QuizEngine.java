@@ -3,7 +3,9 @@ package seydaproje;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * soru olusturan siniftir su anda manuel sorular eklenmektedir her bir kullanici farkli soru sirasi getirmektedir
+ */
 public class QuizEngine implements Gradable {
     private List<Question> sorular;
     private int dogruSayisi = 0;
@@ -34,7 +36,10 @@ public class QuizEngine implements Gradable {
     }
 
     public void dogruCevapVerildi() { dogruSayisi++; }
-
+/**
+ * 
+ * puan hesaplar (dogru sayisini 100le carpip soru sayisina boler)
+ */
     @Override
     public int calculateScore() {
         return (dogruSayisi * 100) / sorular.size();
