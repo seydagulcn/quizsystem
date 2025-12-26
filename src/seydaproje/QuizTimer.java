@@ -8,7 +8,7 @@ import java.util.TimerTask;
  *  bu sinif quiz suresini belirler
  */
 public class QuizTimer {
-    private int kalanSure = 300; 
+    private int kalanSure = 320; 
     private Timer timer;
 
     /**
@@ -35,13 +35,13 @@ public class QuizTimer {
 
     /**
      *
-     * durdur methodu quizi bitirir
+     * durdur methodu quizi bitirir.
      */
     public void durdur() { if (timer != null) timer.cancel(); }
 
     /**
      *
-     * sureyi formatlar
+     * sureyi formatlar ve duze
      * @return
      */
     public String formatliSure() { return String.format("%02d:%02d", kalanSure/60, kalanSure%60); }
