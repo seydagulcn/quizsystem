@@ -1,5 +1,8 @@
 package seydaproje;
-
+/**
+ * 
+ * quiz icin secenekler fonksiyonu. coktan secmeli sorulara secenek uretir.
+ */ 
 public class MultipleChoiceQuestion extends Question {
     private String[] secenekler;
 
