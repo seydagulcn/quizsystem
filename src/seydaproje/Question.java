@@ -1,5 +1,8 @@
 package seydaproje;
-
+/**
+ * 
+ * soru sinifi
+ */
 public abstract class Question {
     protected String soruMetni;
     protected String dogruCevap;
