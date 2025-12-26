@@ -22,11 +22,12 @@ public class ExamSystemGUI extends JFrame {
             "Arel Yazılım Kulübü - Proje Ekibi Seçmeleri\nÖğrenci Numaranızı Giriniz:", 
             "Yönetici Giriş Sistemi", JOptionPane.PLAIN_MESSAGE);
 
-        if (ogrenci.kimlikDogrula(numara)) {
+        if (ogrenci.kimlikDogrula(numara).equals("true")) {
             anaEkran();
         } else {
-            JOptionPane.showMessageDialog(null, "Hatalı Giriş! Sadece Kulüp Üyesi Arel Öğrencileri Katılabilir.");
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, ogrenci.kimlikDogrula(numara));
+           // System.exit(0);
+            girisKontrolu();
         }
     }
 
