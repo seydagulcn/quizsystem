@@ -2,7 +2,7 @@ package seydaproje;
 
 import javax.swing.*;
 import java.awt.*;
-
+ 
 public class ExamSystemGUI extends JFrame {
     private QuizEngine motor = new QuizEngine();
     private QuizTimer sayac = new QuizTimer();
