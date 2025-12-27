@@ -2,25 +2,16 @@ package seydaproje;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.SwingUtilities;
 
-/**
- *
- *  bu sinif quiz suresini belirler
- */
 public class QuizTimer {
-    private int kalanSure; 
+    private int kalanSure;
     private Timer timer;
-    public QuizTimer(int baslangicSuresi) {
-        this.kalanSure = baslangicSuresi;
+
+    public QuizTimer(int toplamSure) {
+        this.kalanSure = toplamSure;
     }
 
-
-    /**
-     *
-     * quizi baslattiginda zamanlayici da baslatir
-     * @param guncelle
-     * @param bitti
-     */
     public void baslat(Runnable guncelle, Runnable bitti) {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -28,25 +19,20 @@ public class QuizTimer {
             public void run() {
                 if (kalanSure > 0) {
                     kalanSure--;
-                    guncelle.run();
+                    SwingUtilities.invokeLater(guncelle);
                 } else {
                     durdur();
-                    bitti.run();
+                    SwingUtilities.invokeLater(bitti);
                 }
             }
         }, 0, 1000);
     }
 
-    /**
-     *
-     * durdur methodu quizi bitirir.
-     */
-    public void durdur() { if (timer != null) timer.cancel(); }
+    public void durdur() {
+        if (timer != null) timer.cancel();
+    }
 
-    /**
-     *
-     * sureyi formatlar ve duze
-     * @return
-     */
-    public String formatliSure() { return String.format("%02d:%02d", kalanSure/60, kalanSure%60); }
+    public String formatliSure() {
+        return String.format("%02d:%02d", kalanSure / 60, kalanSure % 60);
+    }
 }

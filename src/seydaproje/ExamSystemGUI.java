@@ -2,12 +2,11 @@ package seydaproje;
 
 import javax.swing.*;
 import java.awt.*;
- 
+
 public class ExamSystemGUI extends JFrame {
     private QuizEngine motor = new QuizEngine();
     private QuizTimer sayac;
     private Student ogrenci = new Student();
-    
     private JLabel lblSoru, lblSure, lblBilgi;
     private JRadioButton[] secenekler = new JRadioButton[4];
     private ButtonGroup grup = new ButtonGroup();
@@ -18,22 +17,25 @@ public class ExamSystemGUI extends JFrame {
     }
 
     private void girisKontrolu() {
-        String numara = JOptionPane.showInputDialog(null, 
-            "Arel Yazılım Kulübü - Proje Ekibi Seçmeleri\nÖğrenci Numaranızı Giriniz:", 
-            "Yönetici Giriş Sistemi", JOptionPane.PLAIN_MESSAGE);
+        String numara = JOptionPane.showInputDialog(
+                null,
+                "Arel Yazılım Kulübü - Proje Ekibi Seçmeleri\nÖğrenci Numaranızı Giriniz:",
+                "Yönetici Giriş Sistemi",
+                JOptionPane.PLAIN_MESSAGE
+        );
 
         if (ogrenci.kimlikDogrula(numara).equals("true")) {
             anaEkran();
         } else {
             JOptionPane.showMessageDialog(null, ogrenci.kimlikDogrula(numara));
-           // System.exit(0);
             girisKontrolu();
         }
     }
 
     private void anaEkran() {
-    	int toplamSure = motor.toplamSureyiHesapla();
-    	sayac = new QuizTimer(toplamSure);
+        int toplamSure = motor.toplamSureyiHesapla();
+        sayac = new QuizTimer(toplamSure);
+
         setTitle("Arel Software Club - Project Team Selection");
         setSize(650, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -63,9 +65,12 @@ public class ExamSystemGUI extends JFrame {
 
         btnOnayla.addActionListener(e -> soruGecisIslemi());
 
-        sayac.baslat(() -> lblSure.setText("Kalan Süre: " + sayac.formatliSure() + " "), this::testiBitir);
-        
-        soruGecisIslemi(); 
+        sayac.baslat(
+                () -> lblSure.setText("Kalan Süre: " + sayac.formatliSure()),
+                this::testiBitir
+        );
+
+        soruGecisIslemi();
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -74,7 +79,7 @@ public class ExamSystemGUI extends JFrame {
         if (suAnkiSoru != null) {
             for (JRadioButton rb : secenekler) {
                 if (rb.isSelected() && suAnkiSoru.checkAnswer(rb.getText())) {
-                    motor.dogruCevapVerildi();
+                    motor.dogruCevapVerildi(suAnkiSoru);
                 }
             }
         }
@@ -83,7 +88,7 @@ public class ExamSystemGUI extends JFrame {
         if (suAnkiSoru != null) {
             lblSoru.setText("  " + suAnkiSoru.getSoruMetni());
             lblBilgi.setText(" Zorluk: " + suAnkiSoru.getZorlukSeviyesi());
-            String[] siklar = ((MultipleChoiceQuestion)suAnkiSoru).getSecenekler();
+            String[] siklar = ((MultipleChoiceQuestion) suAnkiSoru).getSecenekler();
             for (int i = 0; i < 4; i++) {
                 secenekler[i].setText(siklar[i]);
             }
@@ -95,14 +100,17 @@ public class ExamSystemGUI extends JFrame {
 
     private void testiBitir() {
         sayac.durdur();
-        int puan = motor.calculateScore();
-        String mesaj = puan >= 70 ? 
-            "TEBRİKLER! Proje ekibine girmeye hak kazandınız." : 
-            "Teknik seviyeniz proje ekibi için şu an yeterli değil.";
-        
-        JOptionPane.showMessageDialog(this, 
-            "Yönetici Raporu\nÖğrenci: " + ogrenci.getOgrenciNo() + 
-            "\nBaşarı Yüzdesi: %" + puan + "\nKarar: " + mesaj);
+        int puan = motor.calculateNormalizedScore();
+        String mesaj = puan >= 70
+                ? "TEBRİKLER! Proje ekibine girmeye hak kazandınız."
+                : "Teknik seviyeniz proje ekibi için şu an yeterli değil.";
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Yönetici Raporu\nÖğrenci: " + ogrenci.getOgrenciNo()
+                        + "\nBaşarı Yüzdesi: %" + puan
+                        + "\nKarar: " + mesaj
+        );
         System.exit(0);
     }
 }
