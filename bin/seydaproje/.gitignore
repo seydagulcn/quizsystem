@@ -1,0 +1,15 @@
+# Derlenmiş Java dosyaları (Compiled classes)
+*.class
+
+# Eclipse proje dosyaları ve ayarları
+.classpath
+.project
+.settings/
+
+# Log dosyaları
+*.log
+
+# Eğer Maven veya Gradle kullanıyorsan (Gelecek için)
+target/
+build/
+.gradle/
