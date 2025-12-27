@@ -8,8 +8,12 @@ import java.util.TimerTask;
  *  bu sinif quiz suresini belirler
  */
 public class QuizTimer {
-    private int kalanSure = 320; 
+    private int kalanSure; 
     private Timer timer;
+    public QuizTimer(int baslangicSuresi) {
+        this.kalanSure = baslangicSuresi;
+    }
+
 
     /**
      *

@@ -5,7 +5,7 @@ import java.awt.*;
  
 public class ExamSystemGUI extends JFrame {
     private QuizEngine motor = new QuizEngine();
-    private QuizTimer sayac = new QuizTimer();
+    private QuizTimer sayac;
     private Student ogrenci = new Student();
     
     private JLabel lblSoru, lblSure, lblBilgi;
@@ -32,6 +32,8 @@ public class ExamSystemGUI extends JFrame {
     }
 
     private void anaEkran() {
+    	int toplamSure = motor.toplamSureyiHesapla();
+    	sayac = new QuizTimer(toplamSure);
         setTitle("Arel Software Club - Project Team Selection");
         setSize(650, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -39,7 +41,7 @@ public class ExamSystemGUI extends JFrame {
 
         JPanel ustPanel = new JPanel(new GridLayout(1, 2));
         lblBilgi = new JLabel(" Proje Ekibi Yetkinlik Testi");
-        lblSure = new JLabel("Kalan Süre: 05:00 ", SwingConstants.RIGHT);
+        lblSure = new JLabel("Kalan Süre: " + sayac.formatliSure(), SwingConstants.RIGHT);
         ustPanel.add(lblBilgi);
         ustPanel.add(lblSure);
         add(ustPanel, BorderLayout.NORTH);

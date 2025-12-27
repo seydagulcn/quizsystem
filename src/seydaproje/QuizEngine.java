@@ -44,4 +44,22 @@ public class QuizEngine implements Gradable {
     public int calculateScore() {
         return (dogruSayisi * 100) / sorular.size();
     }
+    /**
+     * Soru zorluklarına gore toplam sureyi saniye cinsinden hesaplar
+     */
+    public int toplamSureyiHesapla() {
+        int toplamSure = 0;
+
+        for (Question q : sorular) {
+            if (q.getZorlukSeviyesi().equals("Kolay")) {
+                toplamSure += 10;
+            } else if (q.getZorlukSeviyesi().equals("Orta")) {
+                toplamSure += 20;
+            } else if (q.getZorlukSeviyesi().equals("Zor")) {
+                toplamSure += 30;
+            }
+        }
+        return toplamSure;
+    }
+
 }
