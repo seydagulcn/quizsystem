@@ -23,6 +23,10 @@ public class QuizEngine implements Gradable {
         projeEkibiSorulariniYukle();
         maksimumPuaniHesapla();
         Collections.shuffle(sorular);
+
+        for (int i = 0; i < sorular.size(); i++) {
+            kullaniciCevaplari.add(null);
+        }
     }
 
     private void projeEkibiSorulariniYukle() {
@@ -83,8 +87,27 @@ public class QuizEngine implements Gradable {
         return null;
     }
 
+    public Question getSoru(int index) {
+        if (index >= 0 && index < sorular.size()) {
+            return sorular.get(index);
+        }
+        return null;
+    }
+
+    public int getSoruSayisi() {
+        return sorular.size();
+    }
+
     public void cevapKaydet(String cevap) {
         kullaniciCevaplari.add(cevap);
+    }
+
+    public void cevapKaydet(int index, String cevap) {
+        kullaniciCevaplari.set(index, cevap);
+    }
+
+    public String getKayitliCevap(int index) {
+        return kullaniciCevaplari.get(index);
     }
 
     public void dogruCevapVerildi(Question soru) {
@@ -148,7 +171,7 @@ public class QuizEngine implements Gradable {
                     .append("\nVerilen Cevap: ").append(verilen)
                     .append("\nDogru Cevap: ").append(q.dogruCevap);
 
-            if (q.checkAnswer(verilen)) {
+            if (verilen != null && q.checkAnswer(verilen)) {
                 rapor.append("\nSonuc: Dogru\n\n");
             } else {
                 rapor.append("\nSonuc: Yanlis\n\n");
