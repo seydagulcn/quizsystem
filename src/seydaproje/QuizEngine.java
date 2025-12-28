@@ -16,11 +16,12 @@ public class QuizEngine implements Gradable {
     private int aktifSoruIndex = 0;
     private int toplamPuan = 0;
     private int maksimumPuan = 0;
+    private List<String> kullaniciCevaplari = new ArrayList<>();
 
     public QuizEngine() {
         sorular = new ArrayList<>();
         projeEkibiSorulariniYukle();
-        maksimumPuaniHesapla();   
+        maksimumPuaniHesapla();
         Collections.shuffle(sorular);
     }
 
@@ -82,15 +83,10 @@ public class QuizEngine implements Gradable {
         return null;
     }
 
-   
-    public void dogruCevapVerildi() {
-        dogruSayisi++;
+    public void cevapKaydet(String cevap) {
+        kullaniciCevaplari.add(cevap);
     }
 
-    /**
-     * 
-     * Soru zorluguna gore puan ekler
-     */
     public void dogruCevapVerildi(Question soru) {
         dogruSayisi++;
 
@@ -103,30 +99,16 @@ public class QuizEngine implements Gradable {
         }
     }
 
-    /**
-     * puan hesaplar
-     * (dogru sayisini 100le carpip soru sayisina boler)
-     * 
-     */
     @Override
     public int calculateScore() {
         return (dogruSayisi * 100) / sorular.size();
     }
 
-    /**
-     *
-     * Zorluk bazli puanlari 100 uzerinden normalize eder
-     * (70 baraji bozulmaz)
-     */
     public int calculateNormalizedScore() {
         if (maksimumPuan == 0) return 0;
         return (toplamPuan * 100) / maksimumPuan;
     }
 
-    /**
-     *
-     * Sinavin alinabilecek maksimum puanini hesaplar
-     */
     private void maksimumPuaniHesapla() {
         for (Question q : sorular) {
             if (q.getZorlukSeviyesi().equals("Kolay")) {
@@ -139,9 +121,6 @@ public class QuizEngine implements Gradable {
         }
     }
 
-    /**
-     * Soru zorluklarına gore toplam sureyi saniye cinsinden hesaplar
-     */
     public int toplamSureyiHesapla() {
         int toplamSure = 0;
 
@@ -155,5 +134,26 @@ public class QuizEngine implements Gradable {
             }
         }
         return toplamSure;
+    }
+
+    public String detayliRapor() {
+        StringBuilder rapor = new StringBuilder();
+
+        for (int i = 0; i < sorular.size(); i++) {
+            Question q = sorular.get(i);
+            String verilen = kullaniciCevaplari.get(i);
+
+            rapor.append("Soru ").append(i + 1).append(": ")
+                    .append(q.getSoruMetni())
+                    .append("\nVerilen Cevap: ").append(verilen)
+                    .append("\nDogru Cevap: ").append(q.dogruCevap);
+
+            if (q.checkAnswer(verilen)) {
+                rapor.append("\nSonuc: Dogru\n\n");
+            } else {
+                rapor.append("\nSonuc: Yanlis\n\n");
+            }
+        }
+        return rapor.toString();
     }
 }

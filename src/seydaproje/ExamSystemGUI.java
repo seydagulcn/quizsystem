@@ -77,10 +77,21 @@ public class ExamSystemGUI extends JFrame {
 
     private void soruGecisIslemi() {
         if (suAnkiSoru != null) {
+            boolean cevapVerildi = false;
+
             for (JRadioButton rb : secenekler) {
-                if (rb.isSelected() && suAnkiSoru.checkAnswer(rb.getText())) {
-                    motor.dogruCevapVerildi(suAnkiSoru);
+                if (rb.isSelected()) {
+                    cevapVerildi = true;
+                    motor.cevapKaydet(rb.getText());
+
+                    if (suAnkiSoru.checkAnswer(rb.getText())) {
+                        motor.dogruCevapVerildi(suAnkiSoru);
+                    }
                 }
+            }
+
+            if (!cevapVerildi) {
+                motor.cevapKaydet("Boş");
             }
         }
 
@@ -105,12 +116,28 @@ public class ExamSystemGUI extends JFrame {
                 ? "TEBRİKLER! Proje ekibine girmeye hak kazandınız."
                 : "Teknik seviyeniz proje ekibi için şu an yeterli değil.";
 
+        JTextArea alan = new JTextArea(motor.detayliRapor());
+        alan.setEditable(false);
+        alan.setLineWrap(true);
+        alan.setWrapStyleWord(true);
+
+        JScrollPane scroll = new JScrollPane(alan);
+        scroll.setPreferredSize(new Dimension(550, 300));
+
         JOptionPane.showMessageDialog(
                 this,
                 "Yönetici Raporu\nÖğrenci: " + ogrenci.getOgrenciNo()
                         + "\nBaşarı Yüzdesi: %" + puan
                         + "\nKarar: " + mesaj
         );
+
+        JOptionPane.showMessageDialog(
+                this,
+                scroll,
+                "Sınav Detay Raporu",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
         System.exit(0);
     }
 }
