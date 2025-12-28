@@ -24,6 +24,7 @@ public class QuizEngine implements Gradable {
         maksimumPuaniHesapla();
         Collections.shuffle(sorular);
 
+        // her soru için boş cevap placeholder
         for (int i = 0; i < sorular.size(); i++) {
             kullaniciCevaplari.add(null);
         }
@@ -98,10 +99,6 @@ public class QuizEngine implements Gradable {
         return sorular.size();
     }
 
-    public void cevapKaydet(String cevap) {
-        kullaniciCevaplari.add(cevap);
-    }
-
     public void cevapKaydet(int index, String cevap) {
         kullaniciCevaplari.set(index, cevap);
     }
@@ -146,7 +143,6 @@ public class QuizEngine implements Gradable {
 
     public int toplamSureyiHesapla() {
         int toplamSure = 0;
-
         for (Question q : sorular) {
             if (q.getZorlukSeviyesi().equals("Kolay")) {
                 toplamSure += 10;
@@ -161,7 +157,6 @@ public class QuizEngine implements Gradable {
 
     public String detayliRapor() {
         StringBuilder rapor = new StringBuilder();
-
         for (int i = 0; i < sorular.size(); i++) {
             Question q = sorular.get(i);
             String verilen = kullaniciCevaplari.get(i);
