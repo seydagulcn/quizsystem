@@ -2,7 +2,10 @@ package seydaproje;
 
 import javax.swing.*;
 import java.awt.*;
-
+/*
+ * bu sinif; ogrenci girisini, sinav ekranini, sorularin goruntulenmesini, zamanlayiciyi ve sinav sonucunu yonetir.
+ * 
+ */
 public class ExamSystemGUI extends JFrame {
     private QuizEngine motor = new QuizEngine();
     private QuizTimer sayac;
@@ -21,7 +24,7 @@ public class ExamSystemGUI extends JFrame {
         String numara = JOptionPane.showInputDialog(
                 null,
                 "Arel Yazılım Kulübü - Proje Ekibi Seçmeleri\nÖğrenci Numaranızı Giriniz:",
-                "Yönetici Giriş Sistemi",
+                "Sinav Giriş Sistemi",
                 JOptionPane.PLAIN_MESSAGE
         );
 
@@ -32,7 +35,10 @@ public class ExamSystemGUI extends JFrame {
             girisKontrolu();
         }
     }
-
+/*
+ * sinavin ana arayuz bilesenleri burada eklenir
+ * 
+ */
     private void anaEkran() {
         int toplamSure = motor.toplamSureyiHesapla();
         sayac = new QuizTimer(toplamSure);
@@ -42,7 +48,7 @@ public class ExamSystemGUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(15, 15));
 
-        // Üst panel
+        
         JPanel ustPanel = new JPanel(new GridLayout(1, 3));
         lblBilgi = new JLabel(" Proje Ekibi Yetkinlik Testi");
         lblSoruNumarasi = new JLabel("", SwingConstants.CENTER);
@@ -52,7 +58,7 @@ public class ExamSystemGUI extends JFrame {
         ustPanel.add(lblSure);
         add(ustPanel, BorderLayout.NORTH);
 
-        // Orta panel
+        
         JPanel ortaPanel = new JPanel(new GridLayout(6, 1, 10, 10));
         lblSoru = new JLabel();
         lblSoru.setFont(new Font("Arial", Font.BOLD, 14));
@@ -65,7 +71,7 @@ public class ExamSystemGUI extends JFrame {
         }
         add(ortaPanel, BorderLayout.CENTER);
 
-        // Alt panel – butonlar
+        
         JPanel altPanel = new JPanel(new FlowLayout());
         JButton btnOnceki = new JButton("Önceki soruya don");
         JButton btnOnayla = new JButton("Onayla ve İlerle");
@@ -73,17 +79,15 @@ public class ExamSystemGUI extends JFrame {
         altPanel.add(btnOnayla);
         add(altPanel, BorderLayout.SOUTH);
 
-        // Buton aksiyonları
         btnOnayla.addActionListener(e -> ileriSoru());
         btnOnceki.addActionListener(e -> geriSoru());
 
-        // Sayaç başlat
         sayac.baslat(
                 () -> lblSure.setText("Kalan Süre: " + sayac.formatliSure()),
                 this::testiBitir
         );
 
-        // İlk soru
+      
         suAnkiSoru = motor.getSoru(aktifSoruIndex);
         soruGoster();
         setLocationRelativeTo(null);
@@ -102,7 +106,7 @@ public class ExamSystemGUI extends JFrame {
             secenekler[i].setText(siklar[i]);
         }
 
-        // Önceden verilmiş cevabı işaretle
+       
         grup.clearSelection();
         String kayitli = motor.getKayitliCevap(aktifSoruIndex);
         if (kayitli != null) {
@@ -165,7 +169,7 @@ public class ExamSystemGUI extends JFrame {
 
         JOptionPane.showMessageDialog(
                 this,
-                "Yönetici Raporu\nÖğrenci: " + ogrenci.getOgrenciNo()
+                "Test Raporu\nÖğrenci: " + ogrenci.getOgrenciNo()
                         + "\nBaşarı Yüzdesi: %" + puan
                         + "\nKarar: " + mesaj
         );

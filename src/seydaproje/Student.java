@@ -26,7 +26,7 @@ public class Student {
 
     	 
     	    if (!no.matches("[0-9]+") || no.length() != 9) {
-    	        return "ogrenci no 9 karakter olmali";
+    	        return "ogrenci numarasi 9 karakter olmali";
     	    }
 
     	    for (String ogrNo : gecerliOgrenciler) {

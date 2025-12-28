@@ -24,7 +24,6 @@ public class QuizEngine implements Gradable {
         maksimumPuaniHesapla();
         Collections.shuffle(sorular);
 
-        // her soru için boş cevap placeholder
         for (int i = 0; i < sorular.size(); i++) {
             kullaniciCevaplari.add(null);
         }
