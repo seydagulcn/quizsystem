@@ -79,6 +79,32 @@ public class QuizEngine implements Gradable {
                 "Linux çekirdeğinin yaratıcısı kimdir?",
                 new String[]{"Steve Jobs", "Mark Zuckerberg", "Linus Torvalds", "Bill Gates"},
                 "Linus Torvalds", "Orta"));
+    
+
+        sorular.add(new TrueFalseQuestion(
+            "Java kodları JVM (Java Sanal Makinesi) sayesinde her işletim sisteminde çalışabilir.", 
+            "Doğru", 
+            "Kolay"));
+
+        sorular.add(new TrueFalseQuestion(
+            "Abstract (Soyut) sınıflardan 'new' anahtar kelimesi ile doğrudan nesne oluşturulabilir.", 
+            "Yanlış", 
+            "Zor"));
+
+        sorular.add(new TrueFalseQuestion(
+            "Java'da bir sınıf, birden fazla sınıfı aynı anda miras (extends) alabilir.", 
+            "Yanlış", 
+            "Orta"));
+
+        sorular.add(new TrueFalseQuestion(
+            "'Final' olarak tanımlanan bir değişkenin değeri sonradan kod içinde değiştirilebilir.", 
+            "Yanlış", 
+            "Kolay"));
+
+        sorular.add(new TrueFalseQuestion(
+            "Interface (Arayüz) içindeki metodlar varsayılan olarak 'public' erişime sahiptir.", 
+            "Doğru", 
+            "Zor"));
     }
 
     public Question sonrakiSoru() {

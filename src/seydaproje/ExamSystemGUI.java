@@ -97,13 +97,22 @@ public class ExamSystemGUI extends JFrame {
     private void soruGoster() {
         if (suAnkiSoru == null) return;
 
+       
         lblSoru.setText("  " + suAnkiSoru.getSoruMetni());
         lblBilgi.setText(" Zorluk: " + suAnkiSoru.getZorlukSeviyesi());
         lblSoruNumarasi.setText("Soru " + (aktifSoruIndex + 1) + " / " + motor.getSoruSayisi());
 
-        String[] siklar = ((MultipleChoiceQuestion) suAnkiSoru).getSecenekler();
+        
+        String[] siklar = suAnkiSoru.getSecenekler();
+
+       
         for (int i = 0; i < 4; i++) {
-            secenekler[i].setText(siklar[i]);
+            if (i < siklar.length) {
+                secenekler[i].setText(siklar[i]);
+                secenekler[i].setVisible(true); 
+            } else {
+                secenekler[i].setVisible(false); 
+            }
         }
 
        
@@ -117,7 +126,6 @@ public class ExamSystemGUI extends JFrame {
             }
         }
     }
-
     private void ileriSoru() {
         if (suAnkiSoru != null) {
             boolean secildi = false;

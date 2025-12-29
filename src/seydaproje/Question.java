@@ -15,7 +15,7 @@ public abstract class Question {
     }
 
     public abstract boolean checkAnswer(String answer);
-    
+    public abstract String[] getSecenekler();
     public String getSoruMetni() { return soruMetni; }
     public String getZorlukSeviyesi() { return zorlukSeviyesi; }
 }

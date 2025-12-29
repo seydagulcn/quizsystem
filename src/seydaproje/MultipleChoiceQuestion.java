@@ -1,6 +1,6 @@
 package seydaproje;
+
 /**
- * 
  * quiz icin secenekler fonksiyonu. coktan secmeli sorulara secenek uretir.
  */ 
 public class MultipleChoiceQuestion extends Question {
@@ -16,5 +16,9 @@ public class MultipleChoiceQuestion extends Question {
         return dogruCevap.equalsIgnoreCase(answer);
     }
 
-    public String[] getSecenekler() { return secenekler; }
+   
+    @Override
+    public String[] getSecenekler() { 
+        return secenekler; 
+    }
 }
