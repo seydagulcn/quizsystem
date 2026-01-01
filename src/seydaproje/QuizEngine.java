@@ -17,6 +17,7 @@ public class QuizEngine implements Gradable {
     private int toplamPuan = 0;
     private int maksimumPuan = 0;
     private List<String> kullaniciCevaplari = new ArrayList<>();
+    private Boolean[] soruDogruMu;
 
     public QuizEngine() {
         sorular = new ArrayList<>();
@@ -27,6 +28,8 @@ public class QuizEngine implements Gradable {
         for (int i = 0; i < sorular.size(); i++) {
             kullaniciCevaplari.add(null);
         }
+
+        soruDogruMu = new Boolean[sorular.size()];
     }
 
     private void projeEkibiSorulariniYukle() {
@@ -79,38 +82,31 @@ public class QuizEngine implements Gradable {
                 "Linux çekirdeğinin yaratıcısı kimdir?",
                 new String[]{"Steve Jobs", "Mark Zuckerberg", "Linus Torvalds", "Bill Gates"},
                 "Linus Torvalds", "Orta"));
-    
 
         sorular.add(new TrueFalseQuestion(
-            "Java kodları JVM (Java Sanal Makinesi) sayesinde her işletim sisteminde çalışabilir.", 
-            "Doğru", 
-            "Kolay"));
+                "Java kodları JVM (Java Sanal Makinesi) sayesinde her işletim sisteminde çalışabilir.",
+                "Doğru",
+                "Kolay"));
 
         sorular.add(new TrueFalseQuestion(
-            "Abstract (Soyut) sınıflardan 'new' anahtar kelimesi ile doğrudan nesne oluşturulabilir.", 
-            "Yanlış", 
-            "Zor"));
+                "Abstract (Soyut) sınıflardan 'new' anahtar kelimesi ile doğrudan nesne oluşturulabilir.",
+                "Yanlış",
+                "Zor"));
 
         sorular.add(new TrueFalseQuestion(
-            "Java'da bir sınıf, birden fazla sınıfı aynı anda miras (extends) alabilir.", 
-            "Yanlış", 
-            "Orta"));
+                "Java'da bir sınıf, birden fazla sınıfı aynı anda miras (extends) alabilir.",
+                "Yanlış",
+                "Orta"));
 
         sorular.add(new TrueFalseQuestion(
-            "'Final' olarak tanımlanan bir değişkenin değeri sonradan kod içinde değiştirilebilir.", 
-            "Yanlış", 
-            "Kolay"));
+                "'Final' olarak tanımlanan bir değişkenin değeri sonradan kod içinde değiştirilebilir.",
+                "Yanlış",
+                "Kolay"));
 
         sorular.add(new TrueFalseQuestion(
-            "Interface (Arayüz) içindeki metodlar varsayılan olarak 'public' erişime sahiptir.", 
-            "Doğru", 
-            "Zor"));
-    }
-
-    public Question sonrakiSoru() {
-        if (aktifSoruIndex < sorular.size())
-            return sorular.get(aktifSoruIndex++);
-        return null;
+                "Interface (Arayüz) içindeki metodlar varsayılan olarak 'public' erişime sahiptir.",
+                "Doğru",
+                "Zor"));
     }
 
     public Question getSoru(int index) {
@@ -132,9 +128,22 @@ public class QuizEngine implements Gradable {
         return kullaniciCevaplari.get(index);
     }
 
-    public void dogruCevapVerildi(Question soru) {
-        dogruSayisi++;
+    public void cevapGuncelle(int index, Question soru, String yeniCevap) {
+        Boolean oncekiDurum = soruDogruMu[index];
+        boolean simdiDogru = soru.checkAnswer(yeniCevap);
 
+        if (Boolean.TRUE.equals(oncekiDurum) && !simdiDogru) {
+            puanDus(soru);
+        }
+
+        if (!Boolean.TRUE.equals(oncekiDurum) && simdiDogru) {
+            puanEkle(soru);
+        }
+
+        soruDogruMu[index] = simdiDogru;
+    }
+
+    private void puanEkle(Question soru) {
         if (soru.getZorlukSeviyesi().equals("Kolay")) {
             toplamPuan += 10;
         } else if (soru.getZorlukSeviyesi().equals("Orta")) {
@@ -144,9 +153,19 @@ public class QuizEngine implements Gradable {
         }
     }
 
+    private void puanDus(Question soru) {
+        if (soru.getZorlukSeviyesi().equals("Kolay")) {
+            toplamPuan -= 10;
+        } else if (soru.getZorlukSeviyesi().equals("Orta")) {
+            toplamPuan -= 20;
+        } else if (soru.getZorlukSeviyesi().equals("Zor")) {
+            toplamPuan -= 30;
+        }
+    }
+
     @Override
     public int calculateScore() {
-        return (dogruSayisi * 100) / sorular.size();
+        return (toplamPuan * 100) / maksimumPuan;
     }
 
     public int calculateNormalizedScore() {

@@ -2,17 +2,22 @@ package seydaproje;
 
 import javax.swing.*;
 import java.awt.*;
+
 /*
- * bu sinif; ogrenci girisini, sinav ekranini, sorularin goruntulenmesini, zamanlayiciyi ve sinav sonucunu yonetir.
- * 
+ * bu sinif; ogrenci girisini, sinav ekranini, sorularin goruntulenmesini,
+ * zamanlayiciyi ve sinav sonucunu yonetir.
+ *
  */
 public class ExamSystemGUI extends JFrame {
+
     private QuizEngine motor = new QuizEngine();
     private QuizTimer sayac;
     private Student ogrenci = new Student();
+
     private JLabel lblSoru, lblSure, lblBilgi, lblSoruNumarasi;
     private JRadioButton[] secenekler = new JRadioButton[4];
     private ButtonGroup grup = new ButtonGroup();
+
     private Question suAnkiSoru;
     private int aktifSoruIndex = 0;
 
@@ -28,6 +33,10 @@ public class ExamSystemGUI extends JFrame {
                 JOptionPane.PLAIN_MESSAGE
         );
 
+        if (numara == null) {
+            System.exit(0);
+        }
+
         if (ogrenci.kimlikDogrula(numara).equals("true")) {
             anaEkran();
         } else {
@@ -35,10 +44,11 @@ public class ExamSystemGUI extends JFrame {
             girisKontrolu();
         }
     }
-/*
- * sinavin ana arayuz bilesenleri burada eklenir
- * 
- */
+
+    /*
+     * sinavin ana arayuz bilesenleri burada eklenir
+     *
+     */
     private void anaEkran() {
         int toplamSure = motor.toplamSureyiHesapla();
         sayac = new QuizTimer(toplamSure);
@@ -48,17 +58,16 @@ public class ExamSystemGUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(15, 15));
 
-        
         JPanel ustPanel = new JPanel(new GridLayout(1, 3));
         lblBilgi = new JLabel(" Proje Ekibi Yetkinlik Testi");
         lblSoruNumarasi = new JLabel("", SwingConstants.CENTER);
         lblSure = new JLabel("Kalan Süre: " + sayac.formatliSure(), SwingConstants.RIGHT);
+
         ustPanel.add(lblBilgi);
         ustPanel.add(lblSoruNumarasi);
         ustPanel.add(lblSure);
         add(ustPanel, BorderLayout.NORTH);
 
-        
         JPanel ortaPanel = new JPanel(new GridLayout(6, 1, 10, 10));
         lblSoru = new JLabel();
         lblSoru.setFont(new Font("Arial", Font.BOLD, 14));
@@ -69,12 +78,13 @@ public class ExamSystemGUI extends JFrame {
             grup.add(secenekler[i]);
             ortaPanel.add(secenekler[i]);
         }
+
         add(ortaPanel, BorderLayout.CENTER);
 
-        
         JPanel altPanel = new JPanel(new FlowLayout());
         JButton btnOnceki = new JButton("Önceki soruya don");
         JButton btnOnayla = new JButton("Onayla ve İlerle");
+
         altPanel.add(btnOnceki);
         altPanel.add(btnOnayla);
         add(altPanel, BorderLayout.SOUTH);
@@ -87,9 +97,9 @@ public class ExamSystemGUI extends JFrame {
                 this::testiBitir
         );
 
-      
         suAnkiSoru = motor.getSoru(aktifSoruIndex);
         soruGoster();
+
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -97,27 +107,24 @@ public class ExamSystemGUI extends JFrame {
     private void soruGoster() {
         if (suAnkiSoru == null) return;
 
-       
         lblSoru.setText("  " + suAnkiSoru.getSoruMetni());
         lblBilgi.setText(" Zorluk: " + suAnkiSoru.getZorlukSeviyesi());
         lblSoruNumarasi.setText("Soru " + (aktifSoruIndex + 1) + " / " + motor.getSoruSayisi());
 
-        
         String[] siklar = suAnkiSoru.getSecenekler();
 
-       
         for (int i = 0; i < 4; i++) {
             if (i < siklar.length) {
                 secenekler[i].setText(siklar[i]);
-                secenekler[i].setVisible(true); 
+                secenekler[i].setVisible(true);
             } else {
-                secenekler[i].setVisible(false); 
+                secenekler[i].setVisible(false);
             }
         }
 
-       
         grup.clearSelection();
         String kayitli = motor.getKayitliCevap(aktifSoruIndex);
+
         if (kayitli != null) {
             for (JRadioButton rb : secenekler) {
                 if (rb.getText().equals(kayitli)) {
@@ -126,24 +133,25 @@ public class ExamSystemGUI extends JFrame {
             }
         }
     }
+
     private void ileriSoru() {
-        if (suAnkiSoru != null) {
-            boolean secildi = false;
-            for (JRadioButton rb : secenekler) {
-                if (rb.isSelected()) {
-                    secildi = true;
-                    motor.cevapKaydet(aktifSoruIndex, rb.getText());
-                    if (suAnkiSoru.checkAnswer(rb.getText())) {
-                        motor.dogruCevapVerildi(suAnkiSoru);
-                    }
-                }
-            }
-            if (!secildi) {
-                motor.cevapKaydet(aktifSoruIndex, "Boş");
+        boolean secildi = false;
+
+        for (JRadioButton rb : secenekler) {
+            if (rb.isSelected()) {
+                secildi = true;
+                motor.cevapKaydet(aktifSoruIndex, rb.getText());
+                motor.cevapGuncelle(aktifSoruIndex, suAnkiSoru, rb.getText());
             }
         }
 
+        if (!secildi) {
+            motor.cevapKaydet(aktifSoruIndex, "Boş");
+            motor.cevapGuncelle(aktifSoruIndex, suAnkiSoru, "Boş");
+        }
+
         aktifSoruIndex++;
+
         if (aktifSoruIndex < motor.getSoruSayisi()) {
             suAnkiSoru = motor.getSoru(aktifSoruIndex);
             soruGoster();
@@ -162,7 +170,9 @@ public class ExamSystemGUI extends JFrame {
 
     private void testiBitir() {
         sayac.durdur();
+
         int puan = motor.calculateNormalizedScore();
+
         String mesaj = puan >= 70
                 ? "TEBRİKLER! Proje ekibine girmeye hak kazandınız."
                 : "Teknik seviyeniz proje ekibi için şu an yeterli değil.";
