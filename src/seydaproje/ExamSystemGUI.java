@@ -112,13 +112,27 @@ public class ExamSystemGUI extends JFrame {
         JPanel altPanel = new JPanel(new FlowLayout());
         JButton btnOnceki = new JButton("Önceki soruya don");
         JButton btnOnayla = new JButton("Onayla ve İlerle");
+        JButton btnBitir = new JButton("Sınavı Bitir");
 
         altPanel.add(btnOnceki);
         altPanel.add(btnOnayla);
+        altPanel.add(btnBitir);
         add(altPanel, BorderLayout.SOUTH);
 
         btnOnayla.addActionListener(e -> ileriSoru());
         btnOnceki.addActionListener(e -> geriSoru());
+        btnBitir.addActionListener(e -> {
+            int secim = JOptionPane.showConfirmDialog(
+                    this,
+                    "Sınavı bitirmek istediğinize emin misiniz?",
+                    "Sınavı Bitir",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (secim == JOptionPane.YES_OPTION) {
+                testiBitir();
+            }
+        });
 
         sayac.baslat(
                 () -> lblSure.setText("Kalan Süre: " + sayac.formatliSure()),
