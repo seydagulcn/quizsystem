@@ -38,11 +38,39 @@ public class ExamSystemGUI extends JFrame {
         }
 
         if (ogrenci.kimlikDogrula(numara).equals("true")) {
-            anaEkran();
+            if (bilgiEkraniGoster()) {
+                anaEkran();
+            } else {
+                System.exit(0);
+            }
         } else {
             JOptionPane.showMessageDialog(null, ogrenci.kimlikDogrula(numara));
             girisKontrolu();
         }
+    }
+
+    private boolean bilgiEkraniGoster() {
+        int soruSayisi = motor.getSoruSayisi();
+        int toplamSure = motor.toplamSureyiHesapla();
+
+        String metin =
+                "Sınav Bilgilendirme\n\n" +
+                "Toplam Soru Sayısı: " + soruSayisi + "\n" +
+                "Toplam Süre: " + (toplamSure / 60) + " dakika\n\n" +
+                "• Sorular arasında ileri ve geri geçiş yapabilirsiniz.\n" +
+                "• Sorular boş bırakılabilir.\n" +
+                "• Süre dolduğunda sınav otomatik olarak sonlandırılır.\n\n" +
+                "Sınavı başlatmak istiyor musunuz?";
+
+        int secim = JOptionPane.showConfirmDialog(
+                null,
+                metin,
+                "Sınav Bilgilendirme",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        return secim == JOptionPane.YES_OPTION;
     }
 
     /*
